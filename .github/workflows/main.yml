@@ -1,0 +1,30 @@
+name: Automated Testing Workflow
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x' # This will use the latest version of Python 3
+
+    - name: Test with 10 numbers
+      run: |
+        python find_lowest_number.py test_data/test1_input.txt test1_output.txt
+        diff test1_output.txt test_data/test1_expected.txt
+
+    - name: Test with 1 number
+      run: |
+        python find_lowest_number.py test_data/test2_input.txt test2_output.txt
+        diff test2_output.txt test_data/test2_expected.txt
+
+    - name: Test with blank file
+      run: |
+        python find_lowest_number.py test_data/test3_input.txt test3_output.txt
+        diff test3_output.txt test_data/test3_expected.txt
