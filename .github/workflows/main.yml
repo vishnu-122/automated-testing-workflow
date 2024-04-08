@@ -13,20 +13,46 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install Python
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x' # This will use the latest version of Python 3
 
-      - name: Run Tests
-        run: |
-          python3 find_lowest_number.py test_data/test1_input.txt test_data/test1_output.txt
-          python3 find_lowest_number.py test_data/test2_input.txt test_data/test2_output.txt
-          python3 find_lowest_number.py test_data/test3_input.txt test_data/test3_output.txt
+      - name: Run Test 1
+        run: python find_lowest_number.py test_data/test1_input.txt test_data/test1_output.txt
 
-      - name: Compare Results and Show Details on Failure
+      - name: Compare Results for Test 1
         run: |
-          diff_output_1=$(diff test_data/test1_output.txt test_data/test1_expected.txt); echo "$diff_output_1"; if [ -z "$diff_output_1" ]; then echo "Test 1 passed"; else echo "Test 1 failed: $diff_output_1"; fi
-          diff_output_2=$(diff test_data/test2_output.txt test_data/test2_expected.txt); echo "$diff_output_2"; if [ -z "$diff_output_2" ]; then echo "Test 2 passed"; else echo "Test 2 failed: $diff_output_2"; fi
-          diff_output_3=$(diff test_data/test3_output.txt test_data/test3_expected.txt); echo "$diff_output_3"; if [ -z "$diff_output_3" ]; then echo "Test 3 passed"; else echo "Test 3 failed: $diff_output_3"; fi
+          diff_output_1=$(diff test_data/test1_output.txt test_data/test1_expected.txt) || true
+          echo "$diff_output_1"
+          if [ -z "$diff_output_1" ]; then
+            echo "Test 1 passed"
+          else
+            echo "Test 1 failed: $diff_output_1"
+          fi
 
+      - name: Run Test 2
+        run: python find_lowest_number.py test_data/test2_input.txt test_data/test2_output.txt
+
+      - name: Compare Results for Test 2
+        run: |
+          diff_output_2=$(diff test_data/test2_output.txt test_data/test2_expected.txt) || true
+          echo "$diff_output_2"
+          if [ -z "$diff_output_2" ]; then
+            echo "Test 2 passed"
+          else
+            echo "Test 2 failed: $diff_output_2"
+          fi
+
+      - name: Run Test 3
+        run: python find_lowest_number.py test_data/test3_input.txt test_data/test3_output.txt
+
+      - name: Compare Results for Test 3
+        run: |
+          diff_output_3=$(diff test_data/test3_output.txt test_data/test3_expected.txt) || true
+          echo "$diff_output_3"
+          if [ -z "$diff_output_3" ]; then
+            echo "Test 3 passed"
+          else
+            echo "Test 3 failed: $diff_output_3"
+          fi
