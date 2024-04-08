@@ -1,30 +1,32 @@
 name: Automated Testing Workflow
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x' # This will use the latest version of Python 3
+      - name: Install Python
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3
 
-    - name: Test with 10 numbers
-      run: |
-        python find_lowest_number.py test_data/test1_input.txt test1_output.txt
-        diff test1_output.txt test_data/test1_expected.txt
+      - name: Run Tests
+        run: |
+          python3 find_lowest_number.py test_data/test1_input.txt test_data/test1_output.txt
+          python3 find_lowest_number.py test_data/test2_input.txt test_data/test2_output.txt
+          python3 find_lowest_number.py test_data/test3_input.txt test_data/test3_output.txt
 
-    - name: Test with 1 number
-      run: |
-        python find_lowest_number.py test_data/test2_input.txt test2_output.txt
-        diff test2_output.txt test_data/test2_expected.txt
+      - name: Compare Results and Show Details on Failure
+        run: |
+          diff_output_1=$(diff test_data/test1_output.txt test_data/test1_expected.txt); echo "$diff_output_1"; if [ -z "$diff_output_1" ]; then echo "Test 1 passed"; else echo "Test 1 failed: $diff_output_1"; fi
+          diff_output_2=$(diff test_data/test2_output.txt test_data/test2_expected.txt); echo "$diff_output_2"; if [ -z "$diff_output_2" ]; then echo "Test 2 passed"; else echo "Test 2 failed: $diff_output_2"; fi
+          diff_output_3=$(diff test_data/test3_output.txt test_data/test3_expected.txt); echo "$diff_output_3"; if [ -z "$diff_output_3" ]; then echo "Test 3 passed"; else echo "Test 3 failed: $diff_output_3"; fi
 
-    - name: Test with blank file
-      run: |
-        python find_lowest_number.py test_data/test3_input.txt test3_output.txt
-        diff test3_output.txt test_data/test3_expected.txt
