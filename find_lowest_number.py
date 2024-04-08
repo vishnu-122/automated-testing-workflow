@@ -34,6 +34,8 @@ with open(input_filename, 'r') as input_file:
 
 with open(output_filename, 'w') as output_file:
     if number_found:
-        output_file.write(str(lowest_number) + "\n")
+        # Write the number followed by a single newline
+        output_file.write(f"{lowest_number}\n")
     else:
+        # Write the message followed by a single newline
         output_file.write("No numbers found in file\n")
